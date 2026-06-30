@@ -18,6 +18,7 @@ func main() {
 	godotenv.Load()
 	dbURL := os.Getenv("DB_URL")
 	platform := os.Getenv("PLATFORM")
+	secret := os.Getenv("AUTH_SECRET")
 
 	db, err := sql.Open("postgres", dbURL)
 
@@ -31,6 +32,7 @@ func main() {
 		fileServerHits: atomic.Int32{},
 		db:             dbQueries,
 		platform:       platform,
+		secret:         secret,
 	}
 
 	const port = "8080"
@@ -48,10 +50,14 @@ func main() {
 	mux.HandleFunc("GET /api/healthz", HealthCheckHandler)
 	mux.HandleFunc("POST /api/chirps", apiCfg.CreateChirpHandler)
 	mux.HandleFunc("POST /api/users", apiCfg.CreateUserHandler)
+	mux.HandleFunc("PUT /api/users", apiCfg.UpdateUserHandler)
 	mux.HandleFunc("POST /api/login", apiCfg.LoginUserHandler)
 
 	mux.HandleFunc("GET /api/chirps", apiCfg.GetAllChirpsHandler)
 	mux.HandleFunc("GET /api/chirps/{chirpID}", apiCfg.GetChirpHandler)
+
+	mux.HandleFunc("POST /api/refresh", apiCfg.RefreshTokenHandler)
+	mux.HandleFunc("POST /api/revoke", apiCfg.RevokeRefreshTokenHandler)
 
 	// Example to serve to a url different from the directory folder names
 	// dir := http.Dir("./assets/")

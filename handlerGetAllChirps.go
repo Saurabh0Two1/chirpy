@@ -7,6 +7,7 @@ import (
 )
 
 func (cfg *apiConfig) GetAllChirpsHandler(w http.ResponseWriter, r *http.Request) {
+
 	chirps, _ := cfg.db.GetAllChirps(r.Context())
 
 	type successResp struct {

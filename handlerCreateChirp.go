@@ -5,24 +5,55 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"saurabh/chirpy.com/m/internal/auth"
 	"saurabh/chirpy.com/m/internal/database"
 	"strings"
 	"time"
 )
 
 func (cfg *apiConfig) CreateChirpHandler(w http.ResponseWriter, r *http.Request) {
-	type Chirp struct {
-		Body   string `json:"body"`
-		UserId string `json:"user_id"`
-	}
-
-	decoder := json.NewDecoder(r.Body)
-	chirp := Chirp{}
-	err := decoder.Decode(&chirp)
 
 	type errorResp struct {
 		Error string `json:"error"`
 	}
+
+	token, err := auth.GetBearerToken(r.Header)
+
+	fmt.Printf("\n token %v \n", token)
+
+	if err != nil {
+		respBody := errorResp{
+			Error: fmt.Sprintf("Error decoding token: %s", err),
+		}
+		jsonData, _ := json.Marshal(respBody)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(400)
+		w.Write(jsonData)
+		return
+	}
+
+	userId, err := auth.ValidateJWT(token, cfg.secret)
+
+	if err != nil {
+		respBody := errorResp{
+			Error: fmt.Sprintf("Invalid token. Please re-login %v", err),
+		}
+		jsonData, _ := json.Marshal(respBody)
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(401)
+		w.Write(jsonData)
+		return
+	}
+
+	type Chirp struct {
+		Body string `json:"body"`
+	}
+
+	decoder := json.NewDecoder(r.Body)
+	chirp := Chirp{}
+	err = decoder.Decode(&chirp)
 
 	if err != nil {
 		log.Printf("Error decoding parameters: %s", err)
@@ -67,10 +98,16 @@ func (cfg *apiConfig) CreateChirpHandler(w http.ResponseWriter, r *http.Request)
 
 	body := strings.Join(words, " ")
 
-	savedChirp, _ := cfg.db.CreateChirp(r.Context(), database.CreateChirpParams{
+	chirp1 := database.CreateChirpParams{
 		Body:   body,
-		UserID: chirp.UserId,
-	})
+		UserID: userId.String(),
+	}
+
+	fmt.Printf("\n chirp1 %v \n", chirp1)
+
+	savedChirp, _ := cfg.db.CreateChirp(r.Context(), chirp1)
+
+	fmt.Printf("\n chirp2 %v \n", savedChirp)
 
 	type successResp struct {
 		ID        string `json:"id"`
