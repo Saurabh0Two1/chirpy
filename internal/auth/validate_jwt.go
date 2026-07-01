@@ -14,7 +14,7 @@ func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
 		return []byte(tokenSecret), nil
 	})
 
-	if err != nil {
+	if err != nil || token.Valid == false {
 		return uuid.Nil, err
 	}
 
@@ -25,6 +25,7 @@ func ValidateJWT(tokenString, tokenSecret string) (uuid.UUID, error) {
 	}
 
 	issuer, err := token.Claims.GetIssuer()
+
 	if err != nil {
 		return uuid.Nil, err
 	}

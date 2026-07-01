@@ -37,11 +37,8 @@ func (cfg *apiConfig) LoginUserHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(jsonData)
 		return
 	}
-	fmt.Printf("a == %v \n", userLoginRequest)
 
 	userDetails, err := cfg.db.FindUserByEmail(r.Context(), userLoginRequest.Email)
-
-	fmt.Printf("b == %v \n", userDetails)
 
 	if err != nil {
 		log.Printf("Failed to find user: %s", err)
@@ -57,8 +54,6 @@ func (cfg *apiConfig) LoginUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	match, err := auth.CheckPasswordHash(userLoginRequest.Password, userDetails.HashedPassword)
-
-	fmt.Printf("q== %v %v \n", match, err)
 
 	if match == false {
 		log.Printf("wrong password: %s", err)

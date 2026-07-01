@@ -11,7 +11,7 @@ import (
 func (cfg *apiConfig) RevokeRefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
 	refreshToken, err := auth.GetBearerToken(r.Header)
 	if err != nil || refreshToken == "" {
-		returnError(w, 401, "refresh token is missing", err)
+		respondWithError(w, 401, "refresh token is missing", err)
 	}
 
 	revokeArg := database.RevokeRefreshTokenParams{
@@ -23,7 +23,7 @@ func (cfg *apiConfig) RevokeRefreshTokenHandler(w http.ResponseWriter, r *http.R
 	_, err = cfg.db.RevokeRefreshToken(r.Context(), revokeArg)
 
 	if err != nil {
-		returnError(w, 401, "refresh token is missing", err)
+		respondWithError(w, 401, "refresh token is missing", err)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -12,7 +11,6 @@ import (
 func (cfg *apiConfig) GetChirpHandler(w http.ResponseWriter, r *http.Request) {
 
 	rawID := r.PathValue("chirpID")
-	fmt.Printf("%v \n", rawID)
 
 	// 2. Parse the string to validate it as a UUID
 	chirpID, err := uuid.Parse(rawID)
@@ -21,8 +19,6 @@ func (cfg *apiConfig) GetChirpHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	chirp, err := cfg.db.GetChirp(r.Context(), chirpID)
-
-	fmt.Printf("-- \n %v \n", chirp)
 
 	if err != nil {
 		http.Error(w, "Chirp not found", http.StatusNotFound)

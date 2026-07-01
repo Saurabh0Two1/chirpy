@@ -19,8 +19,6 @@ func (cfg *apiConfig) CreateChirpHandler(w http.ResponseWriter, r *http.Request)
 
 	token, err := auth.GetBearerToken(r.Header)
 
-	fmt.Printf("\n token %v \n", token)
-
 	if err != nil {
 		respBody := errorResp{
 			Error: fmt.Sprintf("Error decoding token: %s", err),
@@ -103,11 +101,7 @@ func (cfg *apiConfig) CreateChirpHandler(w http.ResponseWriter, r *http.Request)
 		UserID: userId.String(),
 	}
 
-	fmt.Printf("\n chirp1 %v \n", chirp1)
-
 	savedChirp, _ := cfg.db.CreateChirp(r.Context(), chirp1)
-
-	fmt.Printf("\n chirp2 %v \n", savedChirp)
 
 	type successResp struct {
 		ID        string `json:"id"`
