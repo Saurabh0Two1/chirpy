@@ -59,6 +59,7 @@ func main() {
 
 	mux.HandleFunc("POST /api/refresh", apiCfg.RefreshTokenHandler)
 	mux.HandleFunc("POST /api/revoke", apiCfg.RevokeRefreshTokenHandler)
+	mux.HandleFunc("POST /api/polka/webhooks", apiCfg.UpgradeUserHandler)
 
 	// Example to serve to a url different from the directory folder names
 	// dir := http.Dir("./assets/")

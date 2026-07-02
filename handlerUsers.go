@@ -11,10 +11,11 @@ import (
 
 func (cfg *apiConfig) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	type successResp struct {
-		ID        string `json:"id"`
-		CreatedAt string `json:"created_at"`
-		UpdatedAt string `json:"updated_at"`
-		Email     string `json:"email"`
+		ID          string `json:"id"`
+		CreatedAt   string `json:"created_at"`
+		UpdatedAt   string `json:"updated_at"`
+		Email       string `json:"email"`
+		IsChirpyRed bool   `json:"is_chirpy_red"`
 	}
 
 	type errorResp struct {
@@ -71,10 +72,11 @@ func (cfg *apiConfig) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 	tz, err := time.LoadLocation("Asia/Kolkata")
 
 	userResp := successResp{
-		Email:     user.Email.String,
-		CreatedAt: user.CreatedAt.In(tz).Format("2006-01-02T15:04:05 +05:30:00"),
-		UpdatedAt: user.UpdatedAt.In(tz).Format("2006-01-02T15:04:05 +05:30:00"),
-		ID:        user.ID.String(),
+		Email:       user.Email.String,
+		CreatedAt:   user.CreatedAt.In(tz).Format("2006-01-02T15:04:05 +05:30:00"),
+		UpdatedAt:   user.UpdatedAt.In(tz).Format("2006-01-02T15:04:05 +05:30:00"),
+		ID:          user.ID.String(),
+		IsChirpyRed: user.IsChirpyRed,
 	}
 
 	jsonData, _ := json.Marshal(userResp)

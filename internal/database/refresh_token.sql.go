@@ -21,7 +21,7 @@ VALUES (
     $2,
     $3,
     $4
-) RETURNING token, created_at, updated_at, user_id, expires_at, revoked_at
+) RETURNING token, created_at, updated_at, expires_at, revoked_at, user_id
 `
 
 type CreateRefreshTokenParams struct {
@@ -43,15 +43,15 @@ func (q *Queries) CreateRefreshToken(ctx context.Context, arg CreateRefreshToken
 		&i.Token,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.UserID,
 		&i.ExpiresAt,
 		&i.RevokedAt,
+		&i.UserID,
 	)
 	return i, err
 }
 
 const getUserFromRefreshToken = `-- name: GetUserFromRefreshToken :one
-SELECT token, created_at, updated_at, user_id, expires_at, revoked_at FROM refresh_tokens
+SELECT token, created_at, updated_at, expires_at, revoked_at, user_id FROM refresh_tokens
 WHERE token = $1
 `
 
@@ -62,9 +62,9 @@ func (q *Queries) GetUserFromRefreshToken(ctx context.Context, token string) (Re
 		&i.Token,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.UserID,
 		&i.ExpiresAt,
 		&i.RevokedAt,
+		&i.UserID,
 	)
 	return i, err
 }
@@ -73,7 +73,7 @@ const revokeRefreshToken = `-- name: RevokeRefreshToken :one
 UPDATE refresh_tokens
 SET revoked_at = $1, updated_at = $2
 WHERE token = $3 
-RETURNING token, created_at, updated_at, user_id, expires_at, revoked_at
+RETURNING token, created_at, updated_at, expires_at, revoked_at, user_id
 `
 
 type RevokeRefreshTokenParams struct {
@@ -89,9 +89,9 @@ func (q *Queries) RevokeRefreshToken(ctx context.Context, arg RevokeRefreshToken
 		&i.Token,
 		&i.CreatedAt,
 		&i.UpdatedAt,
-		&i.UserID,
 		&i.ExpiresAt,
 		&i.RevokedAt,
+		&i.UserID,
 	)
 	return i, err
 }

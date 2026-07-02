@@ -13,10 +13,11 @@ func (cfg *apiConfig) UpdateUserHandler(w http.ResponseWriter, r *http.Request) 
 		Email    string `json:"email"`
 	}
 	type userResponse struct {
-		ID        string `json:"id"`
-		CreatedAt string `json:"created_at"`
-		UpdatedAt string `json:"updated_at"`
-		Email     string `json:"email"`
+		ID          string `json:"id"`
+		CreatedAt   string `json:"created_at"`
+		UpdatedAt   string `json:"updated_at"`
+		Email       string `json:"email"`
+		IsChirpyRed bool   `json:"is_chirpy_red"`
 	}
 
 	token, err := auth.GetBearerToken(r.Header)
@@ -60,9 +61,10 @@ func (cfg *apiConfig) UpdateUserHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	respondWithJSON(w, http.StatusOK, &userResponse{
-		ID:        user.ID.String(),
-		CreatedAt: user.CreatedAt.String(),
-		UpdatedAt: user.UpdatedAt.String(),
-		Email:     user.Email.String,
+		ID:          user.ID.String(),
+		CreatedAt:   user.CreatedAt.String(),
+		UpdatedAt:   user.UpdatedAt.String(),
+		Email:       user.Email.String,
+		IsChirpyRed: user.IsChirpyRed,
 	})
 }

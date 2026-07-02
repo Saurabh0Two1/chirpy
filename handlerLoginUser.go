@@ -90,6 +90,7 @@ func (cfg *apiConfig) LoginUserHandler(w http.ResponseWriter, r *http.Request) {
 		Email        string `json:"email"`
 		Token        string `json:"token"`
 		RefreshToken string `json:"refresh_token"`
+		IsChirpyRed  bool   `json:"is_chirpy_red"`
 	}
 
 	userResp := successResp{
@@ -97,6 +98,7 @@ func (cfg *apiConfig) LoginUserHandler(w http.ResponseWriter, r *http.Request) {
 		CreatedAt:    userDetails.CreatedAt.In(tz).Format("2006-01-02T15:04:05 +05:30:00"),
 		UpdatedAt:    userDetails.UpdatedAt.In(tz).Format("2006-01-02T15:04:05 +05:30:00"),
 		ID:           userDetails.ID.String(),
+		IsChirpyRed:  userDetails.IsChirpyRed,
 		Token:        token,
 		RefreshToken: refresh_token.Token,
 	}

@@ -23,9 +23,9 @@ type RefreshToken struct {
 	Token     string
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	UserID    uuid.NullUUID
 	ExpiresAt time.Time
 	RevokedAt sql.NullTime
+	UserID    uuid.NullUUID
 }
 
 type User struct {
@@ -34,4 +34,5 @@ type User struct {
 	UpdatedAt      time.Time
 	Email          sql.NullString
 	HashedPassword string
+	IsChirpyRed    bool
 }
