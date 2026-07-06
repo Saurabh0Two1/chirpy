@@ -3,16 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"saurabh/chirpy.com/m/internal/database"
-	"sync/atomic"
 )
-
-type apiConfig struct {
-	fileServerHits atomic.Int32
-	db             *database.Queries
-	platform       string
-	secret         string
-}
 
 func (cfg *apiConfig) MiddlewareMetricsIncrement(next http.Handler) http.Handler {
 

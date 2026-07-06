@@ -13,12 +13,21 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type apiConfig struct {
+	fileServerHits atomic.Int32
+	db             *database.Queries
+	platform       string
+	secret         string
+	polkaKey       string
+}
+
 func main() {
 
 	godotenv.Load()
 	dbURL := os.Getenv("DB_URL")
 	platform := os.Getenv("PLATFORM")
 	secret := os.Getenv("AUTH_SECRET")
+	polkaKey := os.Getenv("POLKA_KEY")
 
 	db, err := sql.Open("postgres", dbURL)
 
@@ -33,6 +42,7 @@ func main() {
 		db:             dbQueries,
 		platform:       platform,
 		secret:         secret,
+		polkaKey:       polkaKey,
 	}
 
 	const port = "8080"
